@@ -1,3 +1,5 @@
+import 'package:bitcoin_ticker/networking.dart';
+
 const List<String> currenciesList = [
   'AUD',
   'BRL',
@@ -28,4 +30,20 @@ const List<String> cryptoList = [
   'LTC',
 ];
 
-class CoinData {}
+const apiKey = '';
+const baseAPIURL = 'https://rest.coinapi.io/v1/exchangerate';
+
+class CoinData {
+  Future<dynamic> getCoinExchangeRate(String currency) async {
+    var coinMap = new Map<String, double>();
+    for (String crypto in cryptoList) {
+      NetworkHelper networkHelper =
+          NetworkHelper(apiURL: '$baseAPIURL/$crypto/$currency?apikey=$apiKey');
+      var coinData = await networkHelper.getData();
+      print(coinData);
+      coinMap[coinData['asset_id_base']] = coinData['rate'];
+    }
+    print(coinMap);
+    return coinMap;
+  }
+}
